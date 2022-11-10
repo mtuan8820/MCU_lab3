@@ -20,9 +20,9 @@ void fsm_run(){
 		index_led=0;
 		led_red_duration=3;
 		led_amber_duration=1;
-		led_green_duration=3;
+		led_green_duration=2;
 		setTimer1(1000);
-		//setTimer2(1000);
+
 		counter1=led_red_duration;
 		counter2=led_green_duration;
 		display_led7_seg(counter1);
@@ -31,9 +31,9 @@ void fsm_run(){
 		state=NORMAL;
 		break;
 	case NORMAL:
-//		if(timer2_flag==1){
+//		if(timer_flag[2]==1){
 //			//led_scanning
-//			setTimer2(1000);
+//			setTimer(2,1000);
 //			update7seg(index_led);
 //			if(index_led==0) index_led=1;
 //			else 			 index_led=0;
@@ -42,13 +42,14 @@ void fsm_run(){
 		display_led7_seg(counter1);
 		if(timer1_flag==1) {
 			//update light_state: red, yellow or green according to light_state
-
+			fsm_auto_run_for_led_7seg_1();
+			fsm_auto_run_for_led_7seg_2();
 			counter1--;
 			counter2--;
-			display_led7_seg(counter1);
 			//when counter reach 0, change color and duration for color
-			if(counter1<0) {
-
+			if(counter1==0) {
+				light_state1++;
+				if(light_state1>2) light_state1=0;
 				switch (light_state1){
 					case 0://red
 						counter1=led_amber_duration;
@@ -62,28 +63,24 @@ void fsm_run(){
 					default:
 						break;
 					}
-				light_state1++;
-				if(light_state1>2) light_state1=0;
 			}
-			if(counter2<0) {
-				switch (light_state2){
-					case 0://green
-						counter2=led_amber_duration;
-						break;
-					case 1://amber
-						counter2=led_red_duration;
-						break;
-					case 2://red
-						counter2=led_green_duration;
-						break;
-					default:
-						break;
-					}
-				light_state2++;
-				if(light_state2>=3) light_state2=0;
-			}
-			fsm_auto_run_for_led_7seg_1();
-			fsm_auto_run_for_led_7seg_2();
+			if(counter2==0) {
+							light_state2++;
+							if(light_state2>=3) light_state2=0;
+							switch (light_state2){
+								case 0://green
+									counter2=led_amber_duration;
+									break;
+								case 1://amber
+									counter2=led_red_duration;
+									break;
+								case 2://red
+									counter2=led_green_duration;
+									break;
+								default:
+									break;
+								}
+						}
 			setTimer1(1000);	//counter is decrease every 1 second
 		}
 
@@ -155,8 +152,6 @@ void fsm_run(){
 			state=MODIFY_AMBER;
 			HAL_GPIO_WritePin(LED_AMBER1_GPIO_Port, LED_AMBER1_Pin, GPIO_PIN_RESET);
 			HAL_GPIO_WritePin(LED_AMBER2_GPIO_Port, LED_AMBER2_Pin ,GPIO_PIN_RESET);
-			enable_7seg(0);
-			display_led7_seg(led_amber_duration);
 			}
 		break;
 	case MODIFY_AMBER:
@@ -211,8 +206,6 @@ void fsm_run(){
 			HAL_GPIO_WritePin(LED_GREEN1_GPIO_Port, LED_GREEN1_Pin ,GPIO_PIN_RESET);
 			HAL_GPIO_WritePin(LED_GREEN2_GPIO_Port, LED_GREEN2_Pin ,GPIO_PIN_RESET);
 			state=MODIFY_GREEN;
-			enable_7seg(0);
-			display_led7_seg(led_green_duration);
 		}
 		break;
 	case MODIFY_GREEN:
@@ -250,8 +243,7 @@ void fsm_run(){
 			display_led7_seg(led_green_duration);
 		}
 		//third button is used to set the value for green led
-		//if first button is pressed, mode will change to NORMAL
-		if(is_button_pressed(2)||is_button_pressed(0)) {
+		if(is_button_pressed(2)) {
 			state=NORMAL;
 			//set gia tri khoi dau cho trang thai normal
 			setTimer1(1000);
@@ -263,6 +255,10 @@ void fsm_run(){
 			light_state2=0;
 		}
 
+		//if first button is pressed, mode will change to NORMAL
+		if(is_button_pressed(0)){
+		state=NORMAL;
+		}
 		break;
 	default:
 		break;
