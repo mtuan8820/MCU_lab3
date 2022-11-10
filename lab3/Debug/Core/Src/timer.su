@@ -1,0 +1,4 @@
+../Core/Src/timer.c:17:6:setTimer1	16	static
+../Core/Src/timer.c:22:6:timer1_run	16	static
+../Core/Src/timer.c:29:6:setTimer2	16	static
+../Core/Src/timer.c:34:6:timer2_run	16	static

@@ -1,0 +1,121 @@
+/*
+ * fsm.c
+ *
+ *  Created on: Nov 8, 2022
+ *      Author: legolas
+ */
+
+
+#include "global.h"
+#include "fsm.h"
+#include "input_reading.h"
+#include "fsm_auto.h"
+#include "main.h"
+#include "led7seg.h"
+#include "timer.h"
+
+void fsm_run(){
+	switch (state){
+	case INIT:
+		index_led=0;
+		display_led7_seg(8);
+		state=NORMAL;
+		setTimer1(1000);
+//		setTimer2(1000);
+		counter=5;
+		light_state=0;
+		break;
+	case NORMAL:
+//		if(timer_flag[2]==1){
+//			//led_scanning
+//			setTimer(2,1000);
+//			update7seg(index_led);
+//			if(index_led==0) index_led=1;
+//			else 			 index_led=0;
+//		}
+		enable_7seg(0);
+
+		if(timer1_flag==1) {
+			fsm_auto_run_for_led_7seg_1();
+			counter--;
+			display_led7_seg(counter);
+			//update light_state: red, yellow or green according to counter
+			if(counter==0) {
+				light_state++;
+				if(light_state>=3) light_state=0;
+				set_counter(light_state);
+			}
+			setTimer1(1000);	//counter is decrease every 1 second
+		}
+
+
+
+		//if first button is pressed, mode will change to MODIFY_RED
+		if(0)
+			{
+			state=MODIFY_RED;
+			//turn off all led7seg to prepare for next mode
+			HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, SET);
+			HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, SET);
+			setTimer1(2000); //set time for led_red blinking in MODIFY_RED mode
+			}
+		break;
+	case MODIFY_RED:
+		//turn off all green and amber leds
+		HAL_GPIO_WritePin(LED_AMBER1_GPIO_Port, LED_AMBER1_Pin, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(LED_GREEN1_GPIO_Port, LED_GREEN1_Pin ,GPIO_PIN_SET);
+		HAL_GPIO_WritePin(LED_AMBER2_GPIO_Port, LED_AMBER2_Pin, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(LED_GREEN2_GPIO_Port, LED_GREEN2_Pin ,GPIO_PIN_SET);
+
+		if(timer2_flag==1){
+			setTimer1(2000);
+			HAL_GPIO_TogglePin(LED_RED1_GPIO_Port, LED_RED1_Pin);
+			HAL_GPIO_TogglePin(LED_RED2_GPIO_Port, LED_RED2_Pin);
+		}//all led reds are blinking in 2Hz
+
+		//led scanning
+		if(timer2_flag==1){
+			//led_scanning
+//			setTimer2(1000);
+			switch(index_led){
+				case 0://use 2 seven-segent LEDs to display the value
+					HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, RESET);
+					display_led7_seg(led_red_duration);
+					break;
+				case 1: //use other 2 to display mode
+					HAL_GPIO_WritePin(EN0_GPIO_Port, EN1_Pin, RESET);
+					display_led7_seg(1);
+					break;
+				default:
+					break;
+
+			}
+			if(index_led==0) index_led=1;
+			else 			 index_led=0;
+		}
+
+		//second button is used to increase the red_duration value
+		if(is_button_pressed(1)==1) led_red_duration++;
+
+		//third button is used to set the value for red led
+		if(is_button_pressed(2)==1) return;
+
+		//if first button is pressed, mode will change to MODIFY_AMBER
+		if(is_button_pressed(0)==1)
+			{
+			state=MODIFY_AMBER;
+			//turn off all led7seg to prepare for next mode
+			HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, SET);
+			HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, SET);
+			setTimer1(2000); //set time for led_red blinking in MODIFY_AMBER mode
+			}
+		break;
+	case MODIFY_AMBER:
+			break;
+	case MODIFY_GREEN:
+			break;
+	default:
+		break;
+	}
+	return;
+}

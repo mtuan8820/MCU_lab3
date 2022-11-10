@@ -1,0 +1,9 @@
+/*
+ * fsm_auto.c
+ *
+ *  Created on: Nov 8, 2022
+ *      Author: legolas
+ */
+
+
+#include "fsm_auto.h"

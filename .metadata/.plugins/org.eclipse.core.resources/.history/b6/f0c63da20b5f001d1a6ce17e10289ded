@@ -1,0 +1,15 @@
+/*
+ * input_reading.h
+ *
+ *  Created on: Nov 8, 2022
+ *      Author: legolas
+ */
+
+#ifndef INC_INPUT_READING_H_
+#define INC_INPUT_READING_H_
+
+void button_reading(void);
+int is_button_pressed(int index);
+int is_button_pressed_1s(int index)
+
+#endif /* INC_INPUT_READING_H_ */

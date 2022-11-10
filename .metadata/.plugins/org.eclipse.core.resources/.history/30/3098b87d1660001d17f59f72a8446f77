@@ -1,0 +1,26 @@
+/*
+ * global.h
+ *
+ *  Created on: Nov 8, 2022
+ *      Author: legolas
+ */
+
+#ifndef INC_GLOBAL_H_
+#define INC_GLOBAL_H_
+
+#define INIT 			0
+#define NORMAL 			1
+#define MODIFY_RED		2
+#define MODIFY_AMBER	3
+#define MODIFY_GREEN	4
+
+extern int index_led;
+extern int counter;
+extern int state;
+extern int num1;
+extern int num2;
+extern int led_red_duration;
+extern int led_amber_duration;
+extern int led_green_duration;
+extern int light_state;
+#endif /* INC_GLOBAL_H_ */

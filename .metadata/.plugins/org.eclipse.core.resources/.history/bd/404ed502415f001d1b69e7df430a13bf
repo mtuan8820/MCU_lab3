@@ -1,0 +1,40 @@
+/*
+ * fsm_auto.c
+ *
+ *  Created on: Nov 8, 2022
+ *      Author: legolas
+ */
+
+
+#include "fsm_auto.h"
+#include "global.h"
+#include "main.h"
+int light_state=0;
+//light_state=0 den 1 do  , den 2 vang
+//light_state=1 den 1 do  , den 2 xanh
+//light_state=2 den 1 vang, den 2 do
+//light_state=3 den 1 xanh, den 2 do
+void fsm_auto_run(){
+	counter++;
+	if(counter<2)	light_state=0;
+	else if (counter>=2&&counter<5) light_state=1;
+	else if (counter<7&&counter>=5)	light_state=2;
+	else if (counter<10&&counter>=7)light_state=3;
+	else counter=0;
+	switch (light_state){
+	case 0:
+		HAL_GPIO_WritePin(LED_RED1_GPIO_Port, LED_RED1_Pin, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(LED_AMBER1_GPIO_Port, LED_AMBER1_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(LED_GREEN1_GPIO_Port, LED_GREEN1_Pin ,GPIO_PIN_RESET);
+		num1 = 4 - count;
+		break;
+	case 1:
+		break;
+	case 2:
+		break;
+	case 3:
+		break;
+	default:
+		break;
+	}
+}

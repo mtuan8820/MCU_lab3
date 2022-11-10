@@ -1,0 +1,74 @@
+/*
+ * input_reading.c
+ *
+ *  Created on: Nov 8, 2022
+ *      Author: legolas
+ */
+
+
+#include "input_reading.h"
+#include "main.h"
+#include "math.h"
+#include "global.h"
+int button_flag[NO_OF_BUTTONS]={0};
+int KeyReg0[NO_OF_BUTTONS] = {NORMAL_STATE};
+int KeyReg1[NO_OF_BUTTONS] = {NORMAL_STATE};
+int KeyReg2[NO_OF_BUTTONS] = {NORMAL_STATE};
+int KeyReg3[NO_OF_BUTTONS] = {NORMAL_STATE};
+int FlagFor3secPressed[NO_OF_BUTTONS] = {0};
+int TimeForKeyPress = 300;
+
+void PressedKeyProcess(int index){
+	switch (index){
+	case 0:
+		button_flag[0]=1;
+		HAL_GPIO_WritePin(LED_AMBER1_GPIO_Port, LED_AMBER1_Pin, GPIO_PIN_SET);
+	    HAL_GPIO_WritePin(LED_GREEN1_GPIO_Port, LED_GREEN1_Pin ,GPIO_PIN_SET);
+		HAL_GPIO_WritePin(LED_AMBER2_GPIO_Port, LED_AMBER2_Pin, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(LED_GREEN2_GPIO_Port, LED_GREEN2_Pin ,GPIO_PIN_SET);
+		HAL_GPIO_WritePin(LED_RED1_GPIO_Port, LED_RED1_Pin, GPIO_PIN_RESET);
+	    HAL_GPIO_WritePin(LED_RED2_GPIO_Port, LED_RED2_Pin ,GPIO_PIN_RESET);
+
+		break;
+	case 1:
+		button_flag[1]=1;
+		led7seg(counter++);
+		if(counter>=10) counter=0;
+		break;
+	case 2:
+		button_flag[2]=1;
+		led7seg(counter--);
+		if(counter<0) counter=9;
+		break;
+	default:
+		break;
+	}
+
+}
+
+void input_reading(){
+for(int i=0;i<3;i++){
+	KeyReg0[i]=KeyReg1[i];
+	KeyReg1[i]=KeyReg2[i];
+	KeyReg2[i]=HAL_GPIO_ReadPin(GPIOC, BUTTON1_Pin*pow(2,i));
+	if((KeyReg0[i]==KeyReg1[i])&&(KeyReg1[i]==KeyReg2[i])){
+		if(KeyReg3[i]!=KeyReg2[i]){
+			KeyReg3[i]=KeyReg2[i];
+			if(KeyReg2[i]==PRESSED_STATE){
+				PressedKeyProcess[i]
+				//after 3 sec button change to pressed_more_than_3sec_state
+				TimeForKeyPress=300;
+				}
+		}else{
+			TimeForKeyPress--;
+			if(TimeForKeyPress==0) {
+				//pressed_more_than_3sec_state
+
+				if(KeyReg2[i]==PRESSED_STATE) //TODO
+				TimeForKeyPress=100;
+				}
+			}
+	}//end if
+}//end for
+
+}

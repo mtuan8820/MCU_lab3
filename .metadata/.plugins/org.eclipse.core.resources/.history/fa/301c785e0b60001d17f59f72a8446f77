@@ -1,0 +1,23 @@
+/*
+ * timer.h
+ *
+ *  Created on: Nov 8, 2022
+ *      Author: legolas
+ */
+
+#ifndef INC_TIMER_H_
+#define INC_TIMER_H_
+
+#define NUM_OF_TIMER 3
+#define TICK 10
+
+extern int timer_flag[NUM_OF_TIMER];
+extern int timer_counter[NUM_OF_TIMER];
+
+
+void setTimer(int index,int duration);
+void timer_run(int index);
+
+
+
+#endif /* INC_TIMER_H_ */

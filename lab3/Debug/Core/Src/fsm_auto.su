@@ -1,0 +1,3 @@
+../Core/Src/fsm_auto.c:15:6:fsm_auto_run_for_led_7seg_1	8	static
+../Core/Src/fsm_auto.c:40:6:set_counter	16	static
+../Core/Src/fsm_auto.c:57:6:fsm_auto_run_for_led_7seg_2	8	static

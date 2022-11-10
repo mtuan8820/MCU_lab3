@@ -1,0 +1,21 @@
+/*
+ * input_reading.c
+ *
+ *  Created on: Nov 8, 2022
+ *      Author: legolas
+ */
+
+
+#include "input_reading.h"
+#include "main.h"
+#include "math.h"
+#include "global.h"
+int button_flag[NO_OF_BUTTONS]={0};
+int KeyReg0[NO_OF_BUTTONS] = {NORMAL_STATE};
+int KeyReg1[NO_OF_BUTTONS] = {NORMAL_STATE};
+int KeyReg2[NO_OF_BUTTONS] = {NORMAL_STATE};
+int KeyReg3[NO_OF_BUTTONS] = {NORMAL_STATE};
+int FlagFor3secPressed[NO_OF_BUTTONS] = {0};
+int TimeForKeyPress = 300;
+
+

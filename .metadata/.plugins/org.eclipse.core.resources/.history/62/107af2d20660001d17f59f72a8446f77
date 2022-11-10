@@ -1,0 +1,68 @@
+/*
+ * fsm_auto.c
+ *
+ *  Created on: Nov 8, 2022
+ *      Author: legolas
+ */
+
+
+#include "fsm_auto.h"
+#include "global.h"
+#include "main.h"
+#include "led7seg.h"
+
+
+void fsm_auto_run_for_led_7seg_1(){
+	switch (light_state){
+	case 0:	//turn on red led
+		HAL_GPIO_WritePin(LED_RED1_GPIO_Port, LED_RED1_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(LED_AMBER1_GPIO_Port, LED_AMBER1_Pin, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(LED_GREEN1_GPIO_Port, LED_GREEN1_Pin ,GPIO_PIN_SET);
+
+		break;
+	case 1: //turn on amber led
+  		  HAL_GPIO_WritePin(LED_RED1_GPIO_Port, LED_RED1_Pin, GPIO_PIN_SET);
+  		  HAL_GPIO_WritePin(LED_AMBER1_GPIO_Port, LED_AMBER1_Pin, GPIO_PIN_RESET);
+  		  HAL_GPIO_WritePin(LED_GREEN1_GPIO_Port, LED_GREEN1_Pin ,GPIO_PIN_SET);
+
+		  break;
+	case 2: //turn on green led
+  		  HAL_GPIO_WritePin(LED_RED1_GPIO_Port, LED_RED1_Pin, GPIO_PIN_SET);
+  		  HAL_GPIO_WritePin(LED_AMBER1_GPIO_Port, LED_AMBER1_Pin, GPIO_PIN_SET);
+  		  HAL_GPIO_WritePin(LED_GREEN1_GPIO_Port, LED_GREEN1_Pin ,GPIO_PIN_RESET);
+
+		  break;
+	default:
+		  break;
+	}
+}
+
+void set_counter(int state){
+	switch (state){
+	case 0:
+		counter=2;
+		break;
+	case 1:
+		counter=3;
+		break;
+	case 2:
+		counter=5;
+		break;
+	default:
+		break;
+	}
+
+}
+
+void fsm_auto_run_for_led_7seg_2(){
+	switch (light_state){
+	case 1: //turn on amber led
+		HAL_GPIO_WritePin(LED_RED2_GPIO_Port, LED_RED2_Pin, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(LED_AMBER2_GPIO_Port, LED_AMBER2_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(LED_GREEN2_GPIO_Port, LED_GREEN2_Pin ,GPIO_PIN_SET);
+		break;
+	default:
+		break;
+	}
+
+}
